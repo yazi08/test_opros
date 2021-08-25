@@ -15,6 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class QuizSerializer(serializers.ModelSerializer):
+    # user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = Quiz
         fields = '__all__'
