@@ -10,15 +10,6 @@ from django.contrib.auth.models import User
 from .models import *
 
 
-# class UserList(generics.ListAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = serializers.UserSerializer
-#
-#
-# class UserDetail(generics.RetrieveAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = serializers.UserSerializer
-
 
 
 """Для юзера
@@ -69,12 +60,38 @@ class QuizzDetailView(ListModelMixin,GenericAPIView):
 
 
 
+#
 
-class  ChoiceDetailView(generics.CreateAPIView):
-    serializer_class = ChoiceSerializer
-    queryset = Choice.objects.all()
 
-    def perform_create(self, serializer):
-        serializer.save(question_id=self.request.question_id)
+# class  ChoiceDetailView(generics.CreateAPIView):
+#     serializer_class = ChoiceSerializer
+#     queryset = Choice.objects.all()
+#
+#
+#
+#     def perform_create(self, serializer,request):
+#         serializer.save(question_id=self.request.question_id)
+
+
+# class ChoiceDetailView(CreateModelMixin,ListModelMixin,GenericAPIView):
+#     # permission_classes = (IsAuthenticated,)
+#     serializer_class = ChoiceSerializer
+#     queryset = Choice.objects.all()
+#     # def get(self, request, *args, **kwargs):
+#     #     return self.list(request, *args, **kwargs)
+#
+#     def post(self, request,quiz_id, *args, **kwargs):
+#
+#         return self.create(request, *args, **kwargs)
+
+class ChoiceDetailView(APIView):
+
+    def post(self, request, question_id):
+        quiz_qs = get_list_or_404(Choice, question_id=question_id)
+        serialized_data = ChoiceSerializer(quiz_qs, many=True)
+        return Response(serialized_data.data)
+
+
+
 
 

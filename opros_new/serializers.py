@@ -11,9 +11,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 
-
-
-
 class QuizSerializer(serializers.ModelSerializer):
     # user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
@@ -24,7 +21,14 @@ class QuizSerializer(serializers.ModelSerializer):
 class ChoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Choice
-        fields = ['id', 'choice_text']
+        fields = [ 'choice_text']
+
+    def create(self, validated_data):
+        rating, _ = Choice.objects.update_or_create(
+            question_id =validated_data.get('question_id',None),
+            choice_text=validated_data.get('choice_text', None),
+        )
+        return rating
 
 
 class QuestionSerializer(serializers.ModelSerializer):
